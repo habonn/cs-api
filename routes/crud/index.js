@@ -5,6 +5,6 @@ router.get("/:table", auth.optional, require("./get-list"));
 router.get("/:table/:id", auth.optional, require("./get-detail"));
 router.post("/:table", auth.optional, require("./post"));
 router.put("/:table/:id", auth.optional, require("./put"));
-// router.delete("/:table/:id", auth.optional, require("./delete"));
+router.delete("/:table/:id", auth.optional, require("./delete"));
 
 module.exports = router;
