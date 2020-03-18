@@ -25,8 +25,18 @@ module.exports = async (req, res, next) => {
             throw Error(`Invalid table ${table}`);
         }
 
-        let query = `SELECT  ${tables[tableIdx].pk} as value , ${column} as text FROM ${table}`;
-        query += ` where ${filter.where}`;
+        let query = `SELECT  ${tables[tableIdx].pk} as value ,`;
+
+        if (table === "sys_user") {
+            query += `  CONCAT(${column}, ' ', last_name) as text FROM ${table}`;
+            query += ` where role = 'Technician' `;
+        }
+        else if (table === "customer"){
+            query += `  CONCAT(${column}, ' ', last_name) as text FROM ${table}`;
+        } else {
+            query += ` ${column} as text FROM ${table}`;
+            query += ` where ${filter.where}`;
+        }
         query += ` order by ${column}`;
 
         let response = {};
@@ -39,6 +49,7 @@ module.exports = async (req, res, next) => {
         response.totalCount = response.rows.length;
 
         res.send(response);
+        client.release(true)
     } catch (err) {
         next(err);
     }
