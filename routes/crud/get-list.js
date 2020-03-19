@@ -55,7 +55,7 @@ module.exports = async (req, res, next) => {
         } else if (table === "task") {
             Object.keys(req.query).forEach(function (key) {
                 if (req.query[key] != '') {
-                    if (key == 'technician_name') queryString += " AND technician_name  = '" + req.query[key] + "'";
+                    if (key == 'technician_name') queryString += " AND sys_user_id  = '" + req.query[key] + "'";
                     else if (key == 'type') queryString += " AND type = '" + req.query[key] + "'";
                     else if (key == 'task_no') queryString += " AND task_no LIKE '%" + req.query[key] + "%'";
                     else if (key == 'taskDateFrom') queryString += " AND task_date >= '" + req.query[key] + "'";
