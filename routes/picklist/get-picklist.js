@@ -49,7 +49,6 @@ module.exports = async (req, res, next) => {
         response.totalCount = response.rows.length;
 
         res.send(response);
-        client.release(true)
     } catch (err) {
         next(err);
     }

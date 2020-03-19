@@ -81,7 +81,6 @@ module.exports = async (req, res, next) => {
         response.totalCount = parseInt(resultCount.rows[0].count);
 
         res.send(response);
-        client.release(true)
     } catch (err) {
         next(err);
     }
