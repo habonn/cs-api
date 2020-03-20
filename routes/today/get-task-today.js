@@ -5,7 +5,7 @@ module.exports = async (req, res, next) => {
     try {
         const table = req.params.table;
         let query = `SELECT * FROM task`;
-        query += ` WHERE DATE(task_date) <= CURRENT_DATE`;
+        query += ` WHERE task_date::date = now()::date `;
  
         let response;
         let result = await client.query(query);
