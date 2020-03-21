@@ -2,6 +2,7 @@ const client = require("../../lib/db");
 const createFilter = require("odata-v4-pg").createFilter;
 const dbColumns = require("../../lib/db-columns");
 const dbTables = require("../../lib/db-tables");
+// const encoded = encodeUrl(uri);
 
 module.exports = async (req, res, next) => {
     try {
@@ -37,11 +38,15 @@ module.exports = async (req, res, next) => {
 
         var queryString = ' WHERE 1=1 ';
         if (table === "customer") {
+            let encoded = "";
             Object.keys(req.query).forEach(function (key) {
                 if (req.query[key] != '') {
                     if (key == 'first_name') queryString += " AND (lower(first_name) LIKE '%" + req.query[key] + "%' OR lower(last_name) LIKE '%" + req.query[key] + "%' OR (upper(first_name) LIKE '%" + req.query[key] + "%' OR upper(last_name) LIKE '%" + req.query[key] + "%' OR first_name LIKE '%" + req.query[key] + "%' OR last_name LIKE '%" + req.query[key] + "%'))";
-                    else if (key == 'email') queryString += " AND lower(email) LIKE '%" + req.query[key] + "%' OR upper(email) LIKE '%" + req.query[key] + "%'";
-                    else if (key == 'tel') queryString += " AND tel LIKE '%" + req.query[key] + "%'";
+                    else if (key == 'email') queryString += " AND lower(email) LIKE '%" + req.query[key] + "%' OR upper(email) LIKE '%" + req.query[key] + "%' OR email LIKE '%" + req.query[key] + "%'";
+                    else if (key == 'location') 
+                    encoded = decodeURI(req.query[key]);
+                    // console.log("asaaasas",encoded);
+                    queryString += " AND location LIKE '%" + encoded + "%'";
                 }
             });
         } else if (table === "sys_user") {
@@ -57,7 +62,7 @@ module.exports = async (req, res, next) => {
                 if (req.query[key] != '') {
                     if (key == 'technician_name') queryString += " AND sys_user_id  = '" + req.query[key] + "'";
                     else if (key == 'type') queryString += " AND type = '" + req.query[key] + "'";
-                    else if (key == 'task_no') queryString += " AND task_no LIKE '%" + req.query[key] + "%'";
+                    else if (key == 'task_no') queryString += " AND task_no LIKE '%" + req.query[key] + "%' OR lower(task_no) LIKE '%" + req.query[key] + "%'";
                     else if (key == 'taskDateFrom') queryString += " AND task_date >= '" + req.query[key] + "'";
                     else if (key == 'taskDateTo') queryString += " AND task_date <= '" + req.query[key] + "'";
                     else if (key == 'status') queryString += " AND status  = '" + req.query[key] + "'";
