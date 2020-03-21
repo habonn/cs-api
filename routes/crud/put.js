@@ -2,6 +2,7 @@ const client = require("../../lib/db");
 const dbColumns = require("../../lib/db-columns");
 const commonColumns = require("../../lib/common-columns");
 const dbTables = require("../../lib/db-tables");
+const bcrypt = require("bcryptjs");
 
 module.exports = async (req, res, next) => {
     try {
@@ -41,10 +42,14 @@ module.exports = async (req, res, next) => {
             if (prop === tableObj.pk) {
                 continue;
             }
+
             if (columns.findIndex(a => a.column_name === prop) > -1) {
                 query += `, ${prop} = $${valIdx}`;
                 valIdx++;
                 let param = req.body[prop];
+                if (prop == "password") {
+                    param = bcrypt.hashSync(param, 12);
+                }
                 if (param === "") {
                     param = null;
                 }
