@@ -72,6 +72,9 @@ module.exports = async (req, res, next) => {
                 queryVal += `, $${valIdx}`;
                 valIdx++;
                 let param = req.body[prop];
+                if (prop == "status") {
+                    param = "O";
+                }
                 if (param === "") {
                     param = null;
                 }

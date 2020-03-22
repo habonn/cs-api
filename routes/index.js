@@ -7,5 +7,6 @@ router.use("/runcode", require("./runcode"));
 router.use("/task", require("./task"));
 router.use("/type", require("./type"));
 router.use("/today", require("./today"));
+router.use("/invoice", require("./invoice"));
 
 module.exports = router;
