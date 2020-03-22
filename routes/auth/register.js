@@ -1,7 +1,8 @@
 const client = require("../../lib/db");
 const bcrypt = require("bcryptjs");
 const uuid = require("uuid");
-
+const nodemailer = require('nodemailer');
+const { mailtemp } = require("./email_template")
 
 module.exports = async (req, res, next) => {
     try {
@@ -56,7 +57,39 @@ module.exports = async (req, res, next) => {
         } else {
             let query = `insert into sys_user (${queryCol}) values (${queryVal})`;
             let result = await client.query(query, queryParams);
+            response = result.rows[0];
             res.status(204).send();
+
+            var name = req.body.first_name
+            var email = req.body.email
+            var username = req.body.username
+            var password = req.body.password
+            var content = `name: ${name} \n email: ${email} \n message: ${content} `
+
+            const transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                    user: 'habonn4@gmail.com', // your email
+                    pass: 'peamzaza00' // your email password
+                }
+            });
+
+            // setup email data with unicode symbols
+            const mailOptions = {
+                from: 'habonn4@gmail.com', // sender
+                to: email,              // list of receivers
+                subject: `Hello ${name}, You can log-in to Total System`,            // Mail subject
+                html: mailtemp(username, password) // HTML body
+            };
+
+            // send mail with defined transport object
+            transporter.sendMail(mailOptions, function (err, info) {
+                if (err)
+                    console.log(err)
+                else
+                    console.log(info);
+            });
+
         }
 
     } catch (err) {
